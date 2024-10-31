@@ -3,6 +3,7 @@
 -- Create users
 CREATE TABLE users (
   id_user     INT AUTO_INCREMENT PRIMARY KEY,
+  password    VARCHAR(255) NOT NULL,
   alias       VARCHAR(255) DEFAULT NULL,
   description TEXT DEFAULT NULL,
   email       VARCHAR(255) NOT NULL UNIQUE,
@@ -35,5 +36,5 @@ CREATE TABLE reviews (
   created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_users_reviews FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
-  CONSTRAINT fk_articles_reviews FOREIGN KEY (id_article) REFERENCES articles(id_article) ON DELETE CASCADE,
+  CONSTRAINT fk_articles_reviews FOREIGN KEY (id_article) REFERENCES articles(id_article) ON DELETE CASCADE
 );
