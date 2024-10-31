@@ -1,9 +1,17 @@
 <?php
 
-require "data/config.php";
+require "data/database.php";
 require "app/dao/user_dao.php";
 
-$userDao = new UserDao($pdo);
+// change information for your mysql configuration
+$db_host = "localhost";
+$db_name = "read_it_test";
+$db_username = "root";
+$db_password = "root";
+
+$database = new Database($db_host, $db_name, $db_username, $db_password);
+
+$userDao = new UserDao($database->getConnection());
 
 // $data = $userDao->getAll();
 //
