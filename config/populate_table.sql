@@ -1,16 +1,16 @@
 -- Populate Table for test_database
 
 -- Inset users
-INSERT INTO users (password, alias, description, email, name, birth_date, country)
+INSERT INTO users (password, alias, description, email, name)
 VALUES 
-('test', 'laura_m', 'Passionnée de littérature et de voyage.', 'laura@example.com', 'Laura Martin', '1988-03-12', 'France'),
-('test', 'max_b', 'Photographe amateur et amateur de café.', 'max@example.com', 'Maxime Bernard', '1992-05-20', 'Belgique'),
-('test', 'clara_s', 'Adepte de la cuisine végétarienne.', 'clara@example.com', 'Clara Simon', '1995-08-15', 'France'),
-('test', 'olivier_d', 'Technophile et amateur de jeux vidéo.', 'olivier@example.com', 'Olivier Dubois', '1985-11-22', 'Canada'),
-('test', 'sophie_t', 'Passionnée par les arts et la culture.', 'sophie@example.com', 'Sophie Thomas', '1990-07-30', 'Suisse'),
-('test', 'antoine_r', 'Voyageur dans l’âme, explorant le monde.', 'antoine@example.com', 'Antoine Renault', '1991-01-25', 'France'),
-('test', 'marie_l', 'Enseignante, aimant partager ses connaissances.', 'marie@example.com', 'Marie Lefevre', '1980-09-05', 'France'),
-('test', 'lucas_p', 'Blogger passionné de technologie.', 'lucas@example.com', 'Lucas Petit', '1993-06-10', 'Belgique');
+('test', 'laura_m', 'Passionnée de littérature et de voyage.', 'laura@example.com', 'Laura Martin'),
+('test', 'max_b', 'Photographe amateur et amateur de café.', 'max@example.com', 'Maxime Bernard'),
+('test', 'clara_s', 'Adepte de la cuisine végétarienne.', 'clara@example.com', 'Clara Simon'),
+('test', 'olivier_d', 'Technophile et amateur de jeux vidéo.', 'olivier@example.com', 'Olivier Dubois'),
+('test', 'sophie_t', 'Passionnée par les arts et la culture.', 'sophie@example.com', 'Sophie Thomas'),
+('test', 'antoine_r', 'Voyageur dans l’âme, explorant le monde.', 'antoine@example.com', 'Antoine Renault'),
+('test', 'marie_l', 'Enseignante, aimant partager ses connaissances.', 'marie@example.com', 'Marie Lefevre'),
+('test', 'lucas_p', 'Blogger passionné de technologie.', 'lucas@example.com', 'Lucas Petit');
 
 -- Insert articles
 INSERT INTO articles (title_article, text_article, vote, id_user)

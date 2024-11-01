@@ -1,7 +1,8 @@
 <?php
 
-require "data/database.php";
-require "app/dao/user_dao.php";
+require "config/database.php";
+require "app/dao/UserDao.php";
+require "app/models/User.php";
 
 // change information for your mysql configuration
 $db_host = "localhost";
@@ -13,17 +14,4 @@ $database = new Database($db_host, $db_name, $db_username, $db_password);
 
 $userDao = new UserDao($database->getConnection());
 
-// $data = $userDao->getAll();
-//
-// foreach ($data as $value) {
-//   foreach ($value as $key => $user) {
-//     echo "$key: $user<br>";
-//   }
-//   echo "<br>";
-// }
-
-$data = $userDao->findByEmail("laura@example.com");
-
-foreach ($data as $key => $value) {
-  echo "$key => $value<br>";
-}
+require "app/utils/testUserDao.php";
