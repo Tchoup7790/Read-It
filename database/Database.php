@@ -1,5 +1,10 @@
 <?php
 
+namespace Application;
+
+use PDO;
+use PDOException;
+
 class Database
 {
   private $host;
@@ -16,7 +21,7 @@ class Database
     $this->password = $db_password;
   }
 
-  public function getConnection()
+  public function getConnection(): PDO
   {
     $this->connection = null;
     try {
