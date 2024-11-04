@@ -5,7 +5,7 @@ require "./app/test/UserTest.php";
 require "./app/dao/UserDao.php";
 require "./app/model/User.php";
 require "./app/test/ArticleTest.php";
-require "./app/dao/ArticlesDao.php";
+require "./app/dao/ArticleDao.php";
 require "./app/model/Article.php";
 
 use Application\dao\UserDao;
