@@ -27,8 +27,8 @@ CREATE TABLE articles (
 -- Création de reviews
 CREATE TABLE reviews (
   id_review        INT AUTO_INCREMENT PRIMARY KEY,
-  id_user          INT NULL,
-  id_article       INT NULL,
+  id_user          INT NOT NULL,
+  id_article       INT NOT NULL,
   slug             VARCHAR(255) NOT NULL UNIQUE ,
   title_review     VARCHAR(255) NOT NULL,
   content_review   TEXT NOT NULL,

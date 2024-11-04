@@ -1,17 +1,27 @@
 <?php
 
 require "./database/Database.php";
+
 require "./app/test/UserTest.php";
 require "./app/dao/UserDao.php";
 require "./app/model/User.php";
+
 require "./app/test/ArticleTest.php";
 require "./app/dao/ArticleDao.php";
 require "./app/model/Article.php";
 
-use Application\dao\UserDao;
+require "./app/test/ReviewTest.php";
+require "./app/dao/ReviewDao.php";
+require "./app/model/Review.php";
+
 use Application\Database;
+
+use Application\dao\UserDao;
+use Application\dao\ArticleDao;
+
 use Application\test\UserTest;
 use Application\test\ArticleTest;
+use Application\test\ReviewTest;
 
 // changer les informations selon votre propre configuration
 $db_host = "localhost";
@@ -36,3 +46,12 @@ echo "<p>";
 
 $testArticleDao = new ArticleTest($test_database->getConnection(), $user);
 $testArticleDao->run();
+
+$articleDao = new ArticleDao($test_database->getConnection());
+$articles = $articleDao->getAll();
+$article = $articles[0];
+
+echo "<p>";
+
+$testReviewDao = new ReviewTest($test_database->getConnection(), $user, $article);
+$testReviewDao->run();

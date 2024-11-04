@@ -1,0 +1,42 @@
+<?php
+
+namespace Application\model;
+
+class Review
+{
+  public int $id;
+  public int $user_id;
+  public int $article_id;
+  public string $slug;
+  public string $title;
+  public string $content;
+
+  public function __construct(
+    int $id,
+    int $user_id,
+    int $article_id,
+    string $slug,
+    string $title,
+    string $content
+  ) {
+    $this->id = $id;
+    $this->user_id = $user_id;
+    $this->article_id = $article_id;
+    $this->slug = $slug;
+    $this->title = $title;
+    $this->content = $content;
+  }
+
+  public function __toString(): string
+  {
+    return sprintf(
+      "Article: [ID: %s, User: %s, Article: %s, Slug: %s, Title: %s, Content: %s]",
+      $this->id,
+      $this->user_id,
+      $this->article_id,
+      $this->slug,
+      $this->title,
+      $this->content,
+    );
+  }
+}
