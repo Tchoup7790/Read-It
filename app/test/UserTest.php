@@ -146,11 +146,9 @@ class UserTest
     $this->testUpdate();
 
     echo "<br>";
-
     $this->testDelete();
 
-    echo "<br>";
-    echo "<br>";
+    echo "<p>";
 
     echo "UserTest Ok";
   }
