@@ -1,13 +1,13 @@
 <?php
 
-namespace Application\test;
+namespace Application\test\dao;
 
 use Application\dao\UserDao;
 use Application\model\User;
 
 use Error;
 
-class UserTest
+class UserDaoTest
 {
   private array $users;
   private UserDao $userDao;
@@ -35,7 +35,7 @@ class UserTest
     // Vérification de la taille du résultat
     assert(
       sizeof($result) == 3,
-      new Error("UserTest.testGetAll failed: the size of the result is " . sizeof($result) . " but it should be 3")
+      new Error("UserDaoTest.testGetAll failed: the size of the result is " . sizeof($result) . " but it should be 3")
     );
 
     // Met à jour l'ID et le Password de l'utilisateur dans le tableau
@@ -44,7 +44,7 @@ class UserTest
       $this->users[$index]->password_hash = $user->password_hash;
     }
 
-    echo "UserTest.testGetAll OK";
+    echo "UserDaoTest.testGetAll OK";
   }
 
   private function testFindById()
@@ -54,10 +54,10 @@ class UserTest
 
     assert(
       $result == $user,
-      new Error("UserTest.testFindById failed: the recovered user is " . $result . " but it should be " . $user)
+      new Error("UserDaoTest.testFindById failed: the recovered user is " . $result . " but it should be " . $user)
     );
 
-    echo "UserTest.testFindById OK";
+    echo "UserDaoTest.testFindById OK";
   }
 
   private function testFindByEmail()
@@ -67,10 +67,23 @@ class UserTest
 
     assert(
       $result == $user,
-      new Error("UserTest.testFindById failed: the recovered user is " . $result . " but it should be " . $user)
+      new Error("UserDaoTest.testFindByEmail failed: the recovered user is " . $result . " but it should be " . $user)
     );
 
-    echo "UserTest.testFindByEmail OK";
+    echo "UserDaoTest.testFindByEmail OK";
+  }
+
+  private function testFindByAlias()
+  {
+    $user = $this->users[2];
+    $result = $this->userDao->findByAlias($user->alias);
+
+    assert(
+      $result == $user,
+      new Error("UserDaoTest.testFindByAlias failed: the recovered user is " . $result . " but it should be " . $user)
+    );
+
+    echo "UserDaoTest.testFindByAlias OK";
   }
 
   private function testCreate()
@@ -86,10 +99,10 @@ class UserTest
 
     assert(
       $result == $user,
-      new Error("UserTest.testCreate failed: the create user is " . $result . " but it should be " . $user)
+      new Error("UserDaoTest.testCreate failed: the create user is " . $result . " but it should be " . $user)
     );
 
-    echo "UserTest.testCreate OK";
+    echo "UserDaoTest.testCreate OK";
   }
 
   private function testUpdate()
@@ -101,10 +114,10 @@ class UserTest
 
     assert(
       $result->alias == $user->alias,
-      new Error("UserTest.testUpdate failed: the updated user alias is " . $result->alias . " but it should be " . $user->alias)
+      new Error("UserDaoTest.testUpdate failed: the updated user alias is " . $result->alias . " but it should be " . $user->alias)
     );
 
-    echo "UserTest.testUpdate OK";
+    echo "UserDaoTest.testUpdate OK";
   }
 
   private function testDelete()
@@ -118,10 +131,10 @@ class UserTest
 
     assert(
       $old_size - 1  == $new_size,
-      new Error("UserTest.testDelete failed: the size of the result is " . $new_size . " but it should be " . $old_size - 1)
+      new Error("UserDaoTest.testDelete failed: the size of the result is " . $new_size . " but it should be " . $old_size - 1)
     );
 
-    echo "UserTest.testDelete OK";
+    echo "UserDaoTest.testDelete OK";
   }
 
   public function run()
@@ -138,6 +151,10 @@ class UserTest
 
     echo "<br>";
 
+    $this->testFindByAlias();
+
+    echo "<br>";
+
     $this->testCreate();
 
     echo "<br>";
@@ -149,6 +166,6 @@ class UserTest
 
     echo "<p>";
 
-    echo "UserTest Ok";
+    echo "UserDaoTest Ok";
   }
 }

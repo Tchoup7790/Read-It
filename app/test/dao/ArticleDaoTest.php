@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\test;
+namespace Application\test\dao;
 
 use Application\dao\ArticleDao;
 use Application\model\Article;
@@ -8,7 +8,7 @@ use Application\model\User;
 
 use Error;
 
-class ArticleTest
+class ArticleDaoTest
 {
   private User $user;
   private array $articles;
@@ -39,7 +39,7 @@ class ArticleTest
     // Vérification de la taille du résultat
     assert(
       sizeof($result) == 3,
-      new Error("ArticleTest.testGetAll failed: the size of the result is " . sizeof($result) . " but it should be 3")
+      new Error("ArticleDaoTest.testGetAll failed: the size of the result is " . sizeof($result) . " but it should be 3")
     );
 
     // Met à jour l'ID de l'article dans le tableau
@@ -47,7 +47,7 @@ class ArticleTest
       $this->articles[$index]->id = $article->id;
     }
 
-    echo "ArticleTest.testGetAll OK";
+    echo "ArticleDaoTest.testGetAll OK";
   }
 
   private function testFindById()
@@ -57,10 +57,10 @@ class ArticleTest
 
     assert(
       $result == $article,
-      new Error("ArticleTest.testFindById failed: the recovered article is" . $result . " but it should be " . $article)
+      new Error("ArticleDaoTest.testFindById failed: the recovered article is" . $result . " but it should be " . $article)
     );
 
-    echo "ArticleTest.testFindById OK";
+    echo "ArticleDaoTest.testFindById OK";
   }
 
   private function testFindBySlug()
@@ -70,10 +70,10 @@ class ArticleTest
 
     assert(
       $result == $article,
-      new Error("ArticleTest.testFindBySlug failed: the recovered article is " . $result . " but it should be " . $article)
+      new Error("ArticleDaoTest.testFindBySlug failed: the recovered article is " . $result . " but it should be " . $article)
     );
 
-    echo "ArticleTest.testFindBySlug OK";
+    echo "ArticleDaoTest.testFindBySlug OK";
   }
 
 
@@ -89,10 +89,10 @@ class ArticleTest
 
     assert(
       $result == $article,
-      new Error("ArticleTest.testCreate failed: the create article is " . $result . " but it should be " . $article)
+      new Error("ArticleDaoTest.testCreate failed: the create article is " . $result . " but it should be " . $article)
     );
 
-    echo "ArticleTest.testCreate OK";
+    echo "ArticleDaoTest.testCreate OK";
   }
 
   private function testUpdate()
@@ -104,11 +104,11 @@ class ArticleTest
 
     assert(
       $result->slug == $article->slug,
-      new Error("ArticleTest.testUpdate failed: the updated article slug is " . $result->slug . " but it should be " . $article->slug)
+      new Error("ArticleDaoTest.testUpdate failed: the updated article slug is " . $result->slug . " but it should be " . $article->slug)
     );
 
 
-    echo "ArticleTest.testUpdate OK";
+    echo "ArticleDaoTest.testUpdate OK";
   }
 
   private function testDelete()
@@ -122,10 +122,10 @@ class ArticleTest
 
     assert(
       $old_size - 1 == $new_size,
-      new Error("ArticleTest.testDekete failed: the size of the result is " . $new_size . " but it should be " . $old_size - 1)
+      new Error("ArticleDaoTest.testDekete failed: the size of the result is " . $new_size . " but it should be " . $old_size - 1)
     );
 
-    echo "ArticleTest.testDelete OK";
+    echo "ArticleDaoTest.testDelete OK";
   }
 
   public function run()
@@ -154,6 +154,6 @@ class ArticleTest
 
     echo "<p>";
 
-    echo "ArticleTest OK";
+    echo "ArticleDaoTest OK";
   }
 }

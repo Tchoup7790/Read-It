@@ -7,10 +7,6 @@ require "./app/dao/ArticleDao.php";
 require "./app/dao/UserDao.php";
 require "./app/dao/ReviewDao.php";
 
-require "./app/test/ArticleTest.php";
-require "./app/test/ReviewTest.php";
-require "./app/test/UserTest.php";
-
 require "./app/model/Article.php";
 require "./app/model/Review.php";
 require "./app/model/User.php";
@@ -50,26 +46,17 @@ use Application\test\UserTest;
 use Application\test\ArticleTest;
 use Application\test\ReviewTest;
 
-$test_database = Database::createInstance($db_host, $db_test_name, $db_username, $db_password);
-$userDao = UserDao::getInstance();
-$articleDao = ArticleDao::getInstance();
+Router::dispatch($method, $path);
 
+// test
+/*
+require "./app/test/TestDao.php";
+require "./app/test/dao/ArticleDaoTest.php";
+require "./app/test/dao/ReviewDaoTest.php";
+require "./app/test/dao/UserDaoTest.php";
 
-$testUserDao = new UserTest();
-$testUserDao->run();
+use Application\test\TestDao;
 
-echo "<p>";
-
-$users = $userDao->getAll();
-$user = $users[0];
-
-$testArticleDao = new ArticleTest($user);
-$testArticleDao->run();
-
-echo "<p>";
-
-$articles = $articleDao->getAll();
-$article = $articles[0];
-
-$testReviewDao = new ReviewTest($user, $article);
-$testReviewDao->run();
+Database::createInstance($db_host, $db_test_name, $db_username, $db_password);
+TestDao::run();
+*/

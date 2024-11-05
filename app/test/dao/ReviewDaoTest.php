@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\test;
+namespace Application\test\dao;
 
 use Application\dao\ReviewDao;
 use Application\model\Review;
@@ -9,7 +9,7 @@ use Application\model\Article;
 
 use Error;
 
-class ReviewTest
+class ReviewDaoTest
 {
   private $user;
   private $article;
@@ -42,7 +42,7 @@ class ReviewTest
     // Vérification de la taille du résultat
     assert(
       sizeof($result) == 3,
-      new Error("ReviewTest.testGetAll failed: the size of the result is " . sizeof($result) . " but it should be 3")
+      new Error("ReviewDaoTest.testGetAll failed: the size of the result is " . sizeof($result) . " but it should be 3")
     );
 
     // Met à jour l'ID du commentaire dans le tableau
@@ -50,7 +50,7 @@ class ReviewTest
       $this->reviews[$index]->id = $review->id;
     }
 
-    echo "ReviewTest.testGetAll OK";
+    echo "ReviewDaoTest.testGetAll OK";
   }
 
   private function testFindById()
@@ -60,10 +60,10 @@ class ReviewTest
 
     assert(
       $result == $review,
-      new Error("ReviewTest.testFindById failed: the recovered review is" . $result . " but it should be " . $review)
+      new Error("ReviewDaoTest.testFindById failed: the recovered review is" . $result . " but it should be " . $review)
     );
 
-    echo "ReviewTest.testFindById OK";
+    echo "ReviewDaoTest.testFindById OK";
   }
 
   private function testFindBySlug()
@@ -73,10 +73,10 @@ class ReviewTest
 
     assert(
       $result == $review,
-      new Error("ReviewTest.testFindBySlug failed: the recovered review is " . $result . " but it should be " . $review)
+      new Error("ReviewDaoTest.testFindBySlug failed: the recovered review is " . $result . " but it should be " . $review)
     );
 
-    echo "ReviewTest.testFindBySlug OK";
+    echo "ReviewDaoTest.testFindBySlug OK";
   }
 
 
@@ -92,10 +92,10 @@ class ReviewTest
 
     assert(
       $result == $review,
-      new Error("ReviewTest.testCreate failed: the create review is " . $result . " but it should be " . $review)
+      new Error("ReviewDaoTest.testCreate failed: the create review is " . $result . " but it should be " . $review)
     );
 
-    echo "ReviewTest.testCreate OK";
+    echo "ReviewDaoTest.testCreate OK";
   }
 
   private function testUpdate()
@@ -107,11 +107,11 @@ class ReviewTest
 
     assert(
       $result->slug == $review->slug,
-      new Error("ReviewTest.testUpdate failed: the updated review slug is " . $result->slug . " but it should be " . $review->slug)
+      new Error("ReviewDaoTest.testUpdate failed: the updated review slug is " . $result->slug . " but it should be " . $review->slug)
     );
 
 
-    echo "ReviewTest.testUpdate OK";
+    echo "ReviewDaoTest.testUpdate OK";
   }
 
   private function testDelete()
@@ -125,10 +125,10 @@ class ReviewTest
 
     assert(
       $old_size - 1 == $new_size,
-      new Error("ReviewTest.testDekete failed: the size of the result is " . $new_size . " but it should be " . $old_size - 1)
+      new Error("ReviewDaoTest.testDekete failed: the size of the result is " . $new_size . " but it should be " . $old_size - 1)
     );
 
-    echo "ReviewTest.testDelete OK";
+    echo "ReviewDaoTest.testDelete OK";
   }
 
   public function run()
@@ -157,6 +157,6 @@ class ReviewTest
 
     echo "<p>";
 
-    echo "ReviewTest OK";
+    echo "ReviewDaoTest OK";
   }
 }
