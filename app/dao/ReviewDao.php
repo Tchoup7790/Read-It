@@ -2,37 +2,37 @@
 
 namespace Application\dao;
 
+use Application\Database;
 use Application\model\Review;
 
 use PDO;
 use PDOException;
 use Error;
 
-class ReviewDao
+class ReviewDao extends Dao
 {
-  private $connection;
-
+  private static ?ReviewDao $instance = null;
 
   // Construteur de la classe ReviewDao
   // Initialise la connexion à la BDD
   public function __construct(PDO $db_connection)
   {
-    $this->connection = $db_connection;
+    parent::__construct($db_connection, "reviews");
+  }
+
+  // Donne l'instance unique du Dao
+  public static function getInstance(): ReviewDao
+  {
+    if (self::$instance === null) {
+      self::$instance = new ReviewDao(Database::$instance->getConnection());
+    }
+    return self::$instance;
   }
 
   // Récupère tous les commentaires de la BDD
   public function getAll(): array
   {
-    $request = "SELECT * FROM reviews";
-
-    $stmt = $this->connection->prepare($request);
-    $stmt->execute();
-
-    try {
-      $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-      throw new Error("Review.getAll failed : " . $e->getMessage());
-    }
+    $data = parent::getAll();
 
     $reviews = [];
     foreach ($data as $row) {
@@ -54,7 +54,7 @@ class ReviewDao
   {
     $request = "SELECT * FROM reviews WHERE id_review = :id LIMIT 1";
 
-    $stmt = $this->connection->prepare($request);
+    $stmt = self::$connection->prepare($request);
     $stmt->bindParam(":id", $id, PDO::PARAM_INT);
 
     try {
@@ -62,10 +62,10 @@ class ReviewDao
       $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
       if (!$data) {
-        throw new Error("Review.findById failed: review doesn't exist");
+        throw new Error("REVIEWDAO.findById failed: review doesn't exist");
       }
     } catch (PDOException $e) {
-      throw new Error("Review.findById failed: " . $e->getMessage());
+      throw new Error("REVIEWDAO.findById failed: " . $e->getMessage());
     }
 
     return new Review(
@@ -83,7 +83,7 @@ class ReviewDao
   {
     $request = "SELECT * FROM reviews WHERE slug = :slug LIMIT 1";
 
-    $stmt = $this->connection->prepare($request);
+    $stmt = self::$connection->prepare($request);
     $stmt->bindParam(":slug", $slug, PDO::PARAM_STR);
 
     try {
@@ -91,10 +91,10 @@ class ReviewDao
       $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
       if (!$data) {
-        throw new Error("Review.findBySlug failed: review doesn't exist");
+        throw new Error("REVIEWDAO.findBySlug failed: review doesn't exist");
       }
     } catch (PDOException $e) {
-      throw new Error("Review.findBySlug failed: " . $e->getMessage());
+      throw new Error("REVIEWDAO.findBySlug failed: " . $e->getMessage());
     }
 
     return new Review(
@@ -112,7 +112,7 @@ class ReviewDao
   {
     $request = "INSERT INTO reviews (id_user, id_article, slug, title_review, content_review) VALUES ( ?, ?, ?, ?, ?)";
 
-    $stmt = $this->connection->prepare($request);
+    $stmt = self::$connection->prepare($request);
 
     $id_user = $new_review->user_id;
     $id_article = $new_review->article_id;
@@ -129,7 +129,7 @@ class ReviewDao
     try {
       $stmt->execute();
     } catch (PDOException $e) {
-      throw new Error("Review.create failed: " . $e->getMessage());
+      throw new Error("REVIEWDAO.create failed: " . $e->getMessage());
     }
 
     return $this->findBySlug($new_review->slug);
@@ -140,7 +140,7 @@ class ReviewDao
   {
     $request = "UPDATE reviews SET id_user = ?, id_article = ?, slug = ?, title_review = ?, content_review = ? WHERE id_review = ?";
 
-    $stmt = $this->connection->prepare($request);
+    $stmt = self::$connection->prepare($request);
 
     $id_user = $review->user_id;
     $id_article = $review->article_id;
@@ -159,7 +159,7 @@ class ReviewDao
     try {
       $stmt->execute();
     } catch (PDOException $e) {
-      throw new Error("Review.update failed: " . $e->getMessage());
+      throw new Error("REVIEWDAO.update failed: " . $e->getMessage());
     }
 
     return $this->findById($review->id);
@@ -172,27 +172,13 @@ class ReviewDao
 
     $review_id = $review->id;
 
-    $stmt = $this->connection->prepare($request);
+    $stmt = self::$connection->prepare($request);
     $stmt->bindParam(":id", $review_id, PDO::PARAM_INT);
 
     try {
       $stmt->execute();
     } catch (PDOException $e) {
-      throw new Error("Review.delete failed: " . $e->getMessage());
-    }
-  }
-
-  // Supprime tous les élements de la table reviews
-  public function clean()
-  {
-    $request = "DELETE FROM reviews";
-
-    $stmt = $this->connection->prepare($request);
-
-    try {
-      $stmt->execute();
-    } catch (PDOException $e) {
-      throw new Error("Review.clean failed: " . $e->getMessage());
+      throw new Error("REVIEWDAO.delete failed: " . $e->getMessage());
     }
   }
 }

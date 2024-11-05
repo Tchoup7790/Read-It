@@ -2,22 +2,21 @@
 
 namespace Application\test;
 
-use Application\dao\Articledao;
+use Application\dao\ArticleDao;
 use Application\model\Article;
 use Application\model\User;
 
 use Error;
-use PDO;
 
 class ArticleTest
 {
-  private $user;
-  private $articles;
-  private $articleDao;
+  private User $user;
+  private array $articles;
+  private ArticleDao $articleDao;
 
-  public function __construct(PDO $db_connection, User $user)
+  public function __construct(User $user)
   {
-    $this->articleDao = new ArticleDao($db_connection);
+    $this->articleDao = ArticleDao::getInstance();
     $this->articleDao->clean();
 
     $this->user = $user;
@@ -117,7 +116,7 @@ class ArticleTest
     $article = $this->articles[3];
 
     $old_size = sizeof($this->articleDao->getAll());
-    $this->articleDao->delete($article);
+    $this->articleDao->delete($article->id);
 
     $new_size = sizeof($this->articleDao->getAll());
 

@@ -2,36 +2,37 @@
 
 namespace Application\dao;
 
+use Application\Database;
 use Application\model\User;
 
 use PDO;
 use PDOException;
 use Error;
 
-class UserDao
+class UserDao extends Dao
 {
-  private $connection;
+  private static $instance = null;
 
   // Constructeur de la classe UserDao
   // Initialise la connexion à la base de données
   public function __construct(PDO $db_connection)
   {
-    $this->connection = $db_connection;
+    parent::__construct($db_connection, "users");
+  }
+
+  // Donne l'instance unique du DAO
+  public static function getInstance(): UserDao
+  {
+    if (self::$instance === null) {
+      self::$instance = new UserDao(Database::$instance->getConnection());
+    }
+    return self::$instance;
   }
 
   // Récupère tous les utilisateurs de la base de données
   public function getAll(): array
   {
-    $request = "SELECT * FROM users";
-
-    $stmt = $this->connection->prepare($request);
-    $stmt->execute();
-
-    try {
-      $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-      throw new Error("User.getAll failed: " . $e->getMessage());
-    }
+    $data = parent::getAll();
 
     $users = [];
     foreach ($data as $row) {
@@ -53,7 +54,7 @@ class UserDao
   {
     $request = "SELECT * FROM users WHERE id_user = :id LIMIT 1";
 
-    $stmt = $this->connection->prepare($request);
+    $stmt = self::$connection->prepare($request);
     $stmt->bindParam(":id", $id, PDO::PARAM_INT);
 
     try {
@@ -61,10 +62,10 @@ class UserDao
       $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
       if (!$data) {
-        throw new Error("User.findById failed: user doesn't exist");
+        throw new Error("USERDAO.findById failed: user doesn't exist");
       }
     } catch (PDOException $e) {
-      throw new Error("User.findById failed: " . $e->getMessage());
+      throw new Error("USERDAO.findById failed: " . $e->getMessage());
     }
 
     return new User(
@@ -82,7 +83,7 @@ class UserDao
   {
     $request = "SELECT * FROM users WHERE email = :email LIMIT 1";
 
-    $stmt = $this->connection->prepare($request);
+    $stmt = self::$connection->prepare($request);
     $stmt->bindParam(":email", $email, PDO::PARAM_STR);
 
     try {
@@ -90,10 +91,10 @@ class UserDao
       $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
       if (!$data) {
-        throw new Error("User.findByEmail failed : user doesn't exist");
+        throw new Error("USERDAO.findByEmail failed : user doesn't exist");
       }
     } catch (PDOException $e) {
-      throw new Error("User.findByEmail failed: " . $e->getMessage());
+      throw new Error("USERDAO.findByEmail failed: " . $e->getMessage());
     }
 
     return new User(
@@ -111,7 +112,7 @@ class UserDao
   {
     $request = "INSERT INTO users (password, alias, description, email, name) VALUES ( ?, ?, ?, ?, ?)";
 
-    $stmt = $this->connection->prepare($request);
+    $stmt = self::$connection->prepare($request);
 
     $password = password_hash($new_user->password_hash, PASSWORD_DEFAULT);
     $alias = $new_user->alias;
@@ -128,7 +129,7 @@ class UserDao
     try {
       $stmt->execute();
     } catch (PDOException $e) {
-      throw new Error("User.create failed: " . $e->getMessage());
+      throw new Error("USERDAO.create failed: " . $e->getMessage());
     }
 
     return $this->findByEmail($new_user->email);
@@ -139,7 +140,7 @@ class UserDao
   {
     $request = "UPDATE users SET password = ?, email = ?, name = ?, alias = ?, description = ? WHERE id_user = ?";
 
-    $stmt = $this->connection->prepare($request);
+    $stmt = self::$connection->prepare($request);
 
     $password = $user->password_hash;
     $email = $user->email;
@@ -158,40 +159,24 @@ class UserDao
     try {
       $stmt->execute();
     } catch (PDOException $e) {
-      throw new Error("User.update failed: " . $e->getMessage());
+      throw new Error("USERDAO.update failed: " . $e->getMessage());
     }
 
     return $this->findById($user->id);
   }
 
   // Supprime un utilisateur de la base de données
-  public function delete(User $user)
+  public function delete(int $id)
   {
     $request = "DELETE FROM users WHERE id_user = :id";
 
-    $user_id = $user->id;
-
-    $stmt = $this->connection->prepare($request);
-    $stmt->bindParam(":id", $user_id, PDO::PARAM_INT);
+    $stmt = self::$connection->prepare($request);
+    $stmt->bindParam(":id", $id, PDO::PARAM_INT);
 
     try {
       $stmt->execute();
     } catch (PDOException $e) {
-      throw new Error("User.delete failed: " . $e->getMessage());
-    }
-  }
-
-  // Supprime tous les élements de la table users
-  public function clean()
-  {
-    $request = "DELETE FROM users";
-
-    $stmt = $this->connection->prepare($request);
-
-    try {
-      $stmt->execute();
-    } catch (PDOException $e) {
-      throw new Error("User.clean failed: " . $e->getMessage());
+      throw new Error("USERDAO.delete failed: " . $e->getMessage());
     }
   }
 }

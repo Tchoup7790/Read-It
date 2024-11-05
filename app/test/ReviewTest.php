@@ -8,7 +8,6 @@ use Application\model\User;
 use Application\model\Article;
 
 use Error;
-use PDO;
 
 class ReviewTest
 {
@@ -17,9 +16,9 @@ class ReviewTest
   private $reviews;
   private $reviewDao;
 
-  public function __construct(PDO $db_connection, User $user, Article $article)
+  public function __construct(User $user, Article $article)
   {
-    $this->reviewDao = new ReviewDao($db_connection);
+    $this->reviewDao = ReviewDao::getInstance();
     $this->reviewDao->clean();
 
     $this->user = $user;

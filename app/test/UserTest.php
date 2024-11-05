@@ -6,16 +6,15 @@ use Application\dao\UserDao;
 use Application\model\User;
 
 use Error;
-use PDO;
 
 class UserTest
 {
-  private $users;
-  private $userDao;
+  private array $users;
+  private UserDao $userDao;
 
-  public function __construct(PDO $db_connection)
+  public function __construct()
   {
-    $this->userDao = new UserDao($db_connection);
+    $this->userDao = UserDao::getInstance();
     $this->userDao->clean();
 
     $this->users = [
@@ -113,7 +112,7 @@ class UserTest
     $user = $this->users[3];
 
     $old_size = sizeof($this->userDao->getAll());
-    $this->userDao->delete($user);
+    $this->userDao->delete($user->id);
 
     $new_size = sizeof($this->userDao->getAll());
 
