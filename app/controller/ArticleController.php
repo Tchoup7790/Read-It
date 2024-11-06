@@ -8,14 +8,14 @@ class ArticleController
 {
   private ArticleDao $articleDao;
 
-  public function __construct(ArticleDao $dao)
+  public function __construct()
   {
-    $this->articleDao = $dao;
+    $this->articleDao = ArticleDao::getInstance();
   }
 
-  public function homepage()
+  public function index()
   {
-    $articles = $this->articleDao->getAll();
-    require "./app/view/home.php";
+    extract(["articles" => $this->articleDao->getAll()]);
+    include "./app/view/article/index.php";
   }
 }

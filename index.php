@@ -12,39 +12,41 @@ require "./app/model/Review.php";
 require "./app/model/User.php";
 
 require "./app/controller/ArticleController.php";
+require "./app/controller/AuthController.php";
 
+require "./app/verificator/UserVerificator.php";
+
+require "./router.php";
+
+use Application\controller\ArticleController;
+use Application\controller\AuthController;
 use Application\Database;
+use Application\Router;
 
-// changer les informations selon votre propre configuration
+// mise en place de la session et de la db
 $db_host = "localhost";
 $db_name = "read_it_prod";
 $db_test_name = "read_it_test";
 $db_username = "root";
 $db_password = "root";
 
-// création des dao
-/*
-Database::getInstance($db_host, $db_name, $db_username, $db_password);
-*/
-// Récupérer l'URL demandée
-$request = $_SERVER['REQUEST_URI'];
+session_start();
+Database::createInstance($db_host, $db_name, $db_username, $db_password);
 
-$request = rtrim($request, '/');
-$request = explode('/', $request);
+// routage, controller et dao
+$articleController = new ArticleController();
+$authController = new AuthController();
 
+Router::addRoute("GET", "/", [$articleController, "index"]);
 
+Router::addRoute("GET", "/user", [$authController, "index"]);
+Router::addRoute("GET", "/user/create", [$authController, "create"]);
+Router::addRoute("POST", "/user/register", [$authController, "register"]);
+Router::addRoute("GET", "/user/connection", [$authController, "connection"]);
+Router::addRoute("POST", "/user/authentificate", [$authController, "authentificate"]);
 
-if ($request[0] == "") {
-}
-
-// test
-
-use Application\dao\UserDao;
-use Application\dao\ArticleDao;
-
-use Application\test\UserTest;
-use Application\test\ArticleTest;
-use Application\test\ReviewTest;
+$method = $_SERVER["REQUEST_METHOD"];
+$path = $_SERVER["REQUEST_URI"];
 
 Router::dispatch($method, $path);
 

@@ -23,8 +23,16 @@
           <input type="search" id="search" name="search" placeholder="Chercher un article" />
         </li>
         <li>
-          <a href="#">
-            <button>Connection</button>
+          <a href="/user">
+            <button>
+              <?php
+              if ($_SESSION["user"]) {
+                echo "Bienvenue <strong>" . $_SESSION["user"]->name . "</strong>";
+              } else {
+                echo "Se Connecter";
+              }
+              ?>
+            </button>
           </a>
         </li>
       </nav>
@@ -32,12 +40,12 @@
     <main class="container">
       <h1>Bienvenue sur ReadIt</h1>
       <p>Ce site est un projet personnel fait en php natif avec mysql et picocss.</p>
-      <?php
-      ?>
-      <article>
-        <h2>Titre</h2>
-        <p>test</p>
-      </article>
+      <?php foreach ($articles as $article): ?>
+        <article>
+          <h2><i><?php echo $article->title ?><i /></h2>
+          <p><?php echo $article->content ?></p>
+        </article>
+      <?php endforeach; ?>
     </main>
   </body>
 

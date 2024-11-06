@@ -89,6 +89,10 @@ class UserDao extends Dao
     try {
       $stmt->execute();
       $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if (!$data) {
+        throw new Error("USERDAO.findByEmail failed : user doesn't exist");
+      }
     } catch (PDOException $e) {
       throw new Error("USERDAO.findByEmail failed: " . $e->getMessage());
     }
@@ -103,7 +107,7 @@ class UserDao extends Dao
     );
   }
 
-  // Trouve un utilisateur par son alias 
+  // Trouve un utilisateur par son adresse email
   public function findByAlias(string $alias): User
   {
     $request = "SELECT * FROM users WHERE alias = :alias LIMIT 1";
@@ -114,8 +118,12 @@ class UserDao extends Dao
     try {
       $stmt->execute();
       $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if (!$data) {
+        throw new Error("USERDAO.findByAlias failed : user doesn't exist");
+      }
     } catch (PDOException $e) {
-      throw new Error("USERDAO.findByEmail failed: " . $e->getMessage());
+      throw new Error("USERDAO.findByAlias failed: " . $e->getMessage());
     }
 
     return new User(
@@ -127,6 +135,7 @@ class UserDao extends Dao
       $data["description"],
     );
   }
+
   // Crée un nouvel utilisateur dans la base de données
   public function create(User $new_user): User
   {
@@ -149,7 +158,6 @@ class UserDao extends Dao
     try {
       $stmt->execute();
     } catch (PDOException $e) {
-      var_dump($e);
       throw new Error("USERDAO.create failed: " . $e->getMessage());
     }
 
