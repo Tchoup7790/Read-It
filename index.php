@@ -40,10 +40,15 @@ $authController = new AuthController();
 Router::addRoute("GET", "/", [$articleController, "index"]);
 
 Router::addRoute("GET", "/user", [$authController, "index"]);
+Router::addRoute("GET", "/{alias}", [$authController, "user"]);
 Router::addRoute("GET", "/user/create", [$authController, "create"]);
 Router::addRoute("POST", "/user/register", [$authController, "register"]);
-Router::addRoute("GET", "/user/connection", [$authController, "connection"]);
+Router::addRoute("GET", "/user/login", [$authController, "login"]);
 Router::addRoute("POST", "/user/authentificate", [$authController, "authentificate"]);
+Router::addRoute("GET", "/user/update/{alias}", [$authController, "update"]);
+Router::addRoute("POST", "/user/change/{alias}", [$authController, "change"]);
+Router::addRoute("GET", "/user/create", [$authController, "create"]);
+Router::addRoute("GET", "/user/logout", [$authController, "logout"]);
 
 $method = $_SERVER["REQUEST_METHOD"];
 $path = $_SERVER["REQUEST_URI"];

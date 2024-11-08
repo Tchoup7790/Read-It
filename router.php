@@ -14,10 +14,26 @@ class Router
   public static function dispatch($method, $path)
   {
     foreach (self::$routes as $route) {
-      if ($route['method'] === $method && $route['path'] === $path) {
-        return call_user_func($route['callback']);
+      $routePattern = self::convertPathToRegex($route['path']);
+
+      if ($route['method'] === $method && preg_match($routePattern, $path, $matches)) {
+        array_shift($matches);
+
+        call_user_func_array($route['callback'], array_values($matches));
+        return;
       }
     }
-    echo "Route not found";
+
+    $_SESSION["message"] = "404 - Not Found";
+    header("Location: /");
+  }
+
+  private static function convertPathToRegex($path)
+  {
+    $path = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<$1>[a-zA-Z0-9_-]+)', $path);
+
+    $path = "~^$path$~";
+
+    return $path;
   }
 }

@@ -23,17 +23,23 @@
           <input type="search" id="search" name="search" placeholder="Chercher un article" />
         </li>
         <li>
-          <a href="/user">
-            <button>
-              <?php
-              if ($_SESSION["user"]) {
-                echo "Bienvenue <strong>" . $_SESSION["user"]->name . "</strong>";
-              } else {
-                echo "Se Connecter";
-              }
-              ?>
-            </button>
-          </a>
+          <?php
+          if (isset($_SESSION["user"])) {
+            echo "<a href='/" . $_SESSION["user"] . "'>";
+          } else {
+            echo "<a href='/user'>";
+          }
+          ?>
+          <button>
+            <?php
+            if (isset($_SESSION["user"])) {
+              echo "Bienvenue <strong>" . $_SESSION["user"] . "</strong>";
+            } else {
+              echo "Se Connecter";
+            }
+            ?>
+          </button>
+          <?php echo "</a>"; ?>
         </li>
       </nav>
     </header>

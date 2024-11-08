@@ -48,6 +48,35 @@ class ArticleDao extends Dao
     return $articles;
   }
 
+  // Récupère tous les articles liés à un utilisateur
+  public function getByUserId(int $id): array
+  {
+    $request = "SELECT * FROM articles WHERE id_user = :id";
+
+    $stmt = self::$connection->prepare($request);
+    $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+
+    try {
+      $stmt->execute();
+      $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      throw new Error("ARTICLEDAO.getByUserId failed: " . $e->getMessage());
+    }
+
+    $articles = [];
+    foreach ($data as $row) {
+      $article = new Article(
+        $row["id_article"],
+        $row["id_user"],
+        $row["slug"],
+        $row["title_article"],
+        $row["content_article"],
+      );
+      $articles[] = $article;
+    };
+    return $articles;
+  }
+
   // Trouve un article par son identifiant
   public function findById(int $id): Article
   {

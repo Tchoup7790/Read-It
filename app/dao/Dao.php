@@ -38,9 +38,9 @@ abstract class Dao
     $request = "SELECT * FROM " . $this->table_name;
 
     $stmt = self::$connection->prepare($request);
-    $stmt->execute();
 
     try {
+      $stmt->execute();
       $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
       throw new Error("DAO.getAll failed: " . $e->getMessage());

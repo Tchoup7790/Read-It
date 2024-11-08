@@ -22,8 +22,8 @@
       </nav>
     </header>
     <main class="container">
-      <?php include "./app/view/_session.php" ?>
 
+      <?php include "./app/view/_session.php" ?>
       <form action="/user/authentificate" method="post">
 
         <label for="email">Email</label>

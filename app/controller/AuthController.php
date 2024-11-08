@@ -2,6 +2,7 @@
 
 namespace Application\controller;
 
+use Application\dao\ArticleDao;
 use Application\dao\UserDao;
 use Application\model\User;
 use Application\verificator\UserVerificator;
@@ -10,11 +11,15 @@ use Error;
 
 class AuthController
 {
+  private ArticleDao $articleDao;
+
   private UserDao $userDao;
   private UserVerificator $verificator;
 
   public function __construct()
   {
+    $this->articleDao = ArticleDao::getInstance();
+
     $this->userDao = UserDao::getInstance();
     $this->verificator = new UserVerificator;
   }
@@ -24,14 +29,42 @@ class AuthController
     include "./app/view/user/index.php";
   }
 
-  public function connection()
+  public function login()
   {
     include "./app/view/user/connection.php";
+  }
+
+  public function logout()
+  {
+    unset($_SESSION["user"]);
+    header("Location: /");
   }
 
   public function create()
   {
     include "./app/view/user/create.php";
+  }
+
+  public function update($alias)
+  {
+    if ($alias == $_SESSION["alias"]) {
+      $user = $this->userDao->findByAlias($alias);
+      include "./app/view/user/update.php";
+    } else {
+      header("Location: /");
+    }
+  }
+
+  public function user($alias)
+  {
+    if ($alias == $_SESSION["alias"]) {
+      $user = $this->userDao->findByAlias($alias);
+
+      $articles = $this->articleDao->getByUserId($user->id);
+      include "./app/view/user/user.php";
+    } else {
+      header("Location : /");
+    }
   }
 
   public function authentificate()
@@ -44,7 +77,7 @@ class AuthController
     $user = $this->userDao->findByEmail($_POST["email"]);
 
     if (password_verify($_POST["password"], $user->password_hash)) {
-      $_SESSION["user"] = $user;
+      $_SESSION["user"] = $user->alias;
       header("Location: /");
     } else {
       $this->returnWithError("/user/connection", "password", "Le mot de passe n'est pas correct");
@@ -55,16 +88,13 @@ class AuthController
   {
     $verificator = $this->verificator->verifRegister();
     if (!is_null($verificator)) {
+      unset($_SESSION["password"]);
       $this->returnWithError("/user/create", $verificator[0], $verificator[1]);
     }
 
-    $new_user = new User(
-      0,
-      $_POST["password"],
-      $_POST["alias"],
-      $_POST["email"],
-      $_POST["name"],
-    );
+    $new_user = new User(0, $_POST["password"], $_POST["alias"], $_POST["email"], $_POST["name"],);
+
+    unset($_SESSION["password"]);
 
     try {
       $this->userDao->create($new_user);
@@ -72,14 +102,38 @@ class AuthController
       header("Location: /user/connection");
       exit();
     } catch (Error $e) {
-      $this->returnWithError("/user/create", "unknown", "Unknown Error : " . $e->getMessage());
+      $this->returnWithError("/user/create", "", "Unknown Error : " . $e->getMessage());
+    }
+  }
+
+  public function change(string $alias)
+  {
+    if ($alias == $_SESSION["alias"]) {
+      $user = $this->userDao->findByAlias($alias);
+
+      $verificator = $this->verificator->verifChange($user->id);
+      if (!is_null($verificator)) {
+        $this->returnWithError("/user/update/" . $user->alias, $verificator[0], $verificator[1]);
+      }
+
+      $new_user = new User($user->id, $user->password_hash, $_POST["alias"], $_POST["email"], $_POST["name"], $_POST["description"]);
+
+      try {
+        $this->userDao->update($new_user);
+        $_SESSION["message"] = "Utilisateur modifié avec succès.";
+        header("Location: /" . $new_user->alias);
+        exit();
+      } catch (Error $e) {
+        $this->returnWithError("/user/update/" . $user->alias, "", "Unknown Error : " . $e->getMessage());
+      }
+    } else {
+      header("location: /");
     }
   }
 
   private function returnWithError(string $location, string $errorName, string $errorMessage)
   {
-    $_SESSION["error"] = "Erreur lors de la création. <br>";
-    $_SESSION["error-" . $errorName] = $errorMessage;
+    $_SESSION["error" . $errorName] = $errorMessage;
     $_SESSION['form_data'] = $_POST;
     header("Location:" . $location);
     exit();
