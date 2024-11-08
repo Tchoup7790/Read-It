@@ -36,7 +36,7 @@ class ArticleController
   public function create()
   {
     if (!isset($_SESSION["user"])) {
-      header("Location: /user/");
+      header("Location: /user");
     } else {
       include "./app/view/article/create.php";
     }
