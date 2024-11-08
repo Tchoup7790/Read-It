@@ -19,7 +19,6 @@ class AuthController
   public function __construct()
   {
     $this->articleDao = ArticleDao::getInstance();
-
     $this->userDao = UserDao::getInstance();
     $this->verificator = new UserVerificator;
   }
@@ -47,7 +46,8 @@ class AuthController
 
   public function update($alias)
   {
-    if ($alias == $_SESSION["alias"]) {
+    $verificator = $this->verificator->verifUser($alias);
+    if ($verificator) {
       $user = $this->userDao->findByAlias($alias);
       include "./app/view/user/update.php";
     } else {
@@ -57,7 +57,8 @@ class AuthController
 
   public function user($alias)
   {
-    if (isset($_SESSION["user"]) && $alias == $_SESSION["user"]) {
+    $verificator = $this->verificator->verifUser($alias);
+    if ($verificator) {
       $user = $this->userDao->findByAlias($alias);
 
       $articles = $this->articleDao->getByUserId($user->id);
@@ -88,13 +89,13 @@ class AuthController
   {
     $verificator = $this->verificator->verifRegister();
     if (!is_null($verificator)) {
-      unset($_SESSION["password"]);
+      unset($_POST["password"]);
       $this->returnWithError("/user/create", $verificator[0], $verificator[1]);
     }
 
     $new_user = new User(0, $_POST["password"], $_POST["alias"], $_POST["email"], $_POST["name"],);
 
-    unset($_SESSION["password"]);
+    unset($_POST["password"]);
 
     try {
       $this->userDao->create($new_user);
@@ -108,7 +109,8 @@ class AuthController
 
   public function change(string $alias)
   {
-    if (isset($_SESSION["user"]) && $alias == $_SESSION["user"]) {
+    $verificator = $this->verificator->verifUser($alias);
+    if ($verificator) {
       $user = $this->userDao->findByAlias($alias);
 
       $verificator = $this->verificator->verifChange($user->id);

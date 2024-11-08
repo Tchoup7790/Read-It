@@ -20,13 +20,14 @@
           </h2>
         </li>
       </nav>
+      <?php include "./app/view/_session.php"; ?>
     </header>
     <main class="container">
       <div class="grid" style="justify-content: center;align-items: center;display: flex;height: 50%;">
         <a href="/user/create">
           <button class="outline">Créer un compte</button>
         </a>
-        <a href="/user/connection">
+        <a href="/user/login">
           <button>Se Connecter</button>
         </a>
       </div>

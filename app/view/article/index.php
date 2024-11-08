@@ -20,7 +20,7 @@
           </h2>
         </li>
         <li>
-          <input type="search" id="search" name="search" placeholder="Chercher un article" />
+          <input type="search" id="search" name="search" placeholder="Chercher un article" disabled />
         </li>
         <li>
           <?php
@@ -42,14 +42,30 @@
           <?php echo "</a>"; ?>
         </li>
       </nav>
+      <?php include "./app/view/_session.php" ?>
     </header>
     <main class="container">
-      <h1>Bienvenue sur ReadIt</h1>
-      <p>Ce site est un projet personnel fait en php natif avec mysql et picocss.</p>
+      <div style="display: flex; justify-content: space-between;padding-bottom: 30px;">
+        <div>
+          <h1>Bienvenue sur ReadIt</h1>
+          <p>Ce site est un projet personnel fait en php natif avec mysql et picocss.</p>
+        </div>
+        <a href="/article/create">
+          <button class="outline">Création d'un nouvel article</button>
+        </a>
+      </div>
       <?php foreach ($articles as $article): ?>
         <article>
           <h2><i><?php echo $article->title ?><i /></h2>
           <p><?php echo $article->content ?></p>
+          <?php if (isset($user) && $article->user_id == $user): ?>
+            <footer>
+              <small>
+                <a href=<?php echo "/article/update/" . $article->slug ?>>modification</a>
+                <a href=<?php echo "/article/delete/" . $article->slug ?>>supprimer</a>
+              </small>
+            </footer>
+          <?php endif; ?>
         </article>
       <?php endforeach; ?>
     </main>

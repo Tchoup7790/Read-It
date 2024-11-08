@@ -117,4 +117,13 @@ class UserVerificator
     }
     return null;
   }
+
+  public function verifUser(string $alias)
+  {
+    if ($_SESSION["user"] == $alias) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

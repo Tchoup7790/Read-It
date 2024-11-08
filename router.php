@@ -24,8 +24,7 @@ class Router
       }
     }
 
-    $_SESSION["message"] = "404 - Not Found";
-    header("Location: /");
+    echo "404 - Not Found";
   }
 
   private static function convertPathToRegex($path)

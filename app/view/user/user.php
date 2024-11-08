@@ -26,7 +26,7 @@
       <div style="width: 50vw;">
         <div style="display: flex; justify-content: space-between;padding-bottom: 30px;">
           <h1>Articles</h1>
-          <a href="/article/new">
+          <a href="/article/create">
             <button class="outline">Création d'un nouvel article</button>
           </a>
         </div>
@@ -37,6 +37,7 @@
             <footer>
               <small>
                 <a href=<?php echo "/article/update/" . $article->slug ?>>modification</a>
+                <a href=<?php echo "/article/delete/" . $article->slug ?>>supprimer</a>
               </small>
             </footer>
           </article>

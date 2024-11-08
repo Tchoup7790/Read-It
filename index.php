@@ -15,6 +15,7 @@ require "./app/controller/ArticleController.php";
 require "./app/controller/AuthController.php";
 
 require "./app/verificator/UserVerificator.php";
+require "./app/verificator/ArticleVerificator.php";
 
 require "./router.php";
 
@@ -49,6 +50,12 @@ Router::addRoute("GET", "/user/update/{alias}", [$authController, "update"]);
 Router::addRoute("POST", "/user/change/{alias}", [$authController, "change"]);
 Router::addRoute("GET", "/user/create", [$authController, "create"]);
 Router::addRoute("GET", "/user/logout", [$authController, "logout"]);
+
+Router::addRoute("GET", "/article/create", [$articleController, "create"]);
+Router::addRoute("POST", "/article/register", [$articleController, "register"]);
+Router::addRoute("GET", "/article/update/{slug}", [$articleController, "update"]);
+Router::addRoute("POST", "/article/change/{slug}", [$articleController, "change"]);
+Router::addRoute("GET", "/article/delete/{slug}", [$articleController, "delete"]);
 
 $method = $_SERVER["REQUEST_METHOD"];
 $path = $_SERVER["REQUEST_URI"];
