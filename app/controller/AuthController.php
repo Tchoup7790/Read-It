@@ -57,13 +57,13 @@ class AuthController
 
   public function user($alias)
   {
-    if ($alias == $_SESSION["alias"]) {
+    if (isset($_SESSION["user"]) && $alias == $_SESSION["user"]) {
       $user = $this->userDao->findByAlias($alias);
 
       $articles = $this->articleDao->getByUserId($user->id);
       include "./app/view/user/user.php";
     } else {
-      header("Location : /");
+      header("Location: /");
     }
   }
 
@@ -108,7 +108,7 @@ class AuthController
 
   public function change(string $alias)
   {
-    if ($alias == $_SESSION["alias"]) {
+    if (isset($_SESSION["user"]) && $alias == $_SESSION["user"]) {
       $user = $this->userDao->findByAlias($alias);
 
       $verificator = $this->verificator->verifChange($user->id);
