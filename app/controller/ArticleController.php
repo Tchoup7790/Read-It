@@ -68,11 +68,17 @@ class ArticleController
   {
     $article = $this->articleDao->findBySlug($slug);
 
+    if (isset($_SESSION["user"])) {
+      $sessionUser = $this->userDao->findByAlias($_SESSION["user"]);
+    } else {
+      $sessionUser = null;
+    }
+
     $data = [
       "article" => $article,
       "user" => $this->userDao->findById($article->user_id),
       "reviews" => $this->reviewDao->getByArticleId($article->id),
-      "sessionUser" => $this->userDao->findByAlias($_SESSION["user"]),
+      "sessionUser" => $sessionUser,
       "users" => $this->userDao->getAll()
     ];
     extract($data);

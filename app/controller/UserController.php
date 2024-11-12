@@ -82,16 +82,16 @@ class UserController
   {
     $verificator = $this->verificator->verifAuthentificate();
     if (!is_null($verificator)) {
-      $this->returnWithError("/user/connection", $verificator[0], $verificator[1]);
+      $this->returnWithError("/user/login", $verificator[0], $verificator[1]);
     }
 
     $user = $this->userDao->findByEmail($_POST["email"]);
 
     if (password_verify($_POST["password"], $user->password_hash)) {
       $_SESSION["user"] = $user->alias;
-      header("Location: /");
+      header("Location: /" . $user->alias);
     } else {
-      $this->returnWithError("/user/connection", "password", "Le mot de passe n'est pas correct");
+      $this->returnWithError("/user/login", "-password", "Le mot de passe n'est pas correct");
     }
   }
 
@@ -110,7 +110,7 @@ class UserController
     try {
       $this->userDao->create($new_user);
       $_SESSION["message"] = "Utilisateur créé avec succès.";
-      header("Location: /user/connection");
+      header("Location: /user");
       exit();
     } catch (Error $e) {
       $this->returnWithError("/user/create", "", "Unknown Error : " . $e->getMessage());
