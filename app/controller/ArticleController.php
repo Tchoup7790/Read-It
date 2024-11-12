@@ -3,6 +3,7 @@
 namespace Application\controller;
 
 use Application\dao\ArticleDao;
+use Application\dao\ReviewDao;
 use Application\dao\UserDao;
 use Application\verificator\ArticleVerificator;
 use Application\model\Article;
@@ -12,6 +13,7 @@ use Error;
 class ArticleController
 {
   private UserDao $userDao;
+  private ReviewDao $reviewDao;
 
   private ArticleDao $articleDao;
   private ArticleVerificator $verificator;
@@ -19,6 +21,7 @@ class ArticleController
   public function __construct()
   {
     $this->userDao = UserDao::getInstance();
+    $this->reviewDao = ReviewDao::getInstance();
     $this->verificator = new ArticleVerificator;
     $this->articleDao = ArticleDao::getInstance();
   }
@@ -65,7 +68,13 @@ class ArticleController
   {
     $article = $this->articleDao->findBySlug($slug);
 
-    $data = ["article" => $article, "user" => $this->userDao->findById($article->user_id)];
+    $data = [
+      "article" => $article,
+      "user" => $this->userDao->findById($article->user_id),
+      "reviews" => $this->reviewDao->getByArticleId($article->id),
+      "sessionUser" => $this->userDao->findByAlias($_SESSION["user"]),
+      "users" => $this->userDao->getAll()
+    ];
     extract($data);
     include "./app/view/article/show.php";
   }
@@ -84,7 +93,7 @@ class ArticleController
     try {
       $this->articleDao->create($new_article);
       $_SESSION["message"] = "Article créé avec succès.";
-      header("Location: /" . $user->alias);
+      header("Location: /article/" . $new_article->slug);
       exit();
     } catch (Error $e) {
       $this->returnWithError("/article/create", "", "Unknown Error : " . $e->getMessage());
@@ -128,7 +137,12 @@ class ArticleController
     }
 
     $_SESSION["message"] = "Article supprimé avec succès.";
-    header("location: /");
+    if (isset($_SERVER['HTTP_REFERER'])) {
+      $lastUrl = $_SERVER['HTTP_REFERER'];
+      header("Location: $lastUrl");
+    } else {
+      header("location: /");
+    }
   }
 
   private function returnWithError(string $location, string $errorName, string $errorMessage)

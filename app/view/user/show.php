@@ -28,8 +28,33 @@
             <p><?php echo $article->content ?></p>
             <footer>
               <small>
+                <a href=<?php echo "/article/" . $article->slug ?>>voir l'article</a>
+                <br>
+                <br>
                 <a href=<?php echo "/article/update/" . $article->slug ?>>modification</a>
                 <a href=<?php echo "/article/delete/" . $article->slug ?>>supprimer</a>
+              </small>
+            </footer>
+          </article>
+        <?php endforeach; ?>
+        <h2>Commentaires</h2>
+        <?php foreach ($reviews as $review): ?>
+          <article>
+            <h4><i><?php echo $review->title ?><i /></h4>
+            <small>
+              <p>lier à l'article <i>
+                  <?php
+                  $article = array_filter($all_article, fn($article) => $article->id == $review->article_id);
+                  $article = reset($article);
+                  echo $article->title;
+                  ?>
+                </i></p>
+            </small>
+            <p><?php echo $review->content ?></p>
+            <footer>
+              <small>
+                <a href=<?php echo "/review/update/" . $review->slug ?>>modification</a>
+                <a href=<?php echo "/review/delete/" . $review->slug ?>>supprimer</a>
               </small>
             </footer>
           </article>

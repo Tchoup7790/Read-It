@@ -1,13 +1,18 @@
 # Read-It
 
 ## Description  
-Application utilisant le modèle **MVC** pour la gestion des utilisateurs, articles et commentaires, avec un front-end stylisé avec **PicoCSS**.  
+
+Application utilisant le modèle **MVC** pour la gestion des utilisateurs,
+articles et commentaires, avec un front-end stylisé avec **PicoCSS**.  
+
 Les fonctionnalités incluent :  
+
 - **Gestion des utilisateurs** : création, connexion, modification du profil.  
 - **Gestion des articles** : création, modification, consultation.  
 - **Base de données MySQL** pour stocker utilisateurs, articles et commentaires.
 
 ### Technologies  
+
 - **PHP**
 - **MySQL**  
 - **PicoCSS**  
@@ -17,7 +22,7 @@ Les fonctionnalités incluent :
 
 ## Structure du projet  
 
-```
+```bash
 / (racine du projet)
 ├── index.php        # Point d'entrée
 ├── router.php       # Routeur
@@ -35,14 +40,17 @@ Les fonctionnalités incluent :
 ## Installation
 
 1. **Cloner le projet**  
+
    ```bash
    git clone https://github.com/Tchoup7790/Read-It.git
    cd Read-It
    ```
 
 2. **Créer la base de données**  
-   Créez la base de données MySQL et les tables via le fichier SQL dans le dossier :  
-   ```
+   Créez la base de données MySQL et les tables via le fichier SQL
+   dans le dossier :
+
+   ```bash
     / (racine du projet)
     └── /database
         └── create_table.sql
@@ -50,6 +58,7 @@ Les fonctionnalités incluent :
 
 3. **Configurer la base de données**  
    Dans `index.php`, configurez la connexion à votre base de données.
+
    ```php
     // mise en place de la session et de la db
     $db_host = "localhost";
@@ -65,16 +74,18 @@ Les fonctionnalités incluent :
 
 1. **Démarrer MySQL** et vérifier que la base de données est prête.
 2. **Lancer le serveur PHP** :
+
    ```bash
    php -S localhost:8000
    ```
+
 3. **Accéder à l'application** via :  
    [http://localhost:8000](http://localhost:8000)
 
 ---
 
 ## Fonctionnalités à venir
-- Gestion des commentaires dans le front-end
+
 - Recherche des articles
 - création d'un compte administrateur
 - Tests unitaires et validation avancée
@@ -82,9 +93,11 @@ Les fonctionnalités incluent :
 ---
 
 ## Auteurs
+
 - [Tchoup7790](https://github.com/Tchoup7790)
 
 ---
 
 ## Licence  
+
 Projet sous licence MIT - voir le fichier [LICENSE](LICENSE).

@@ -3,6 +3,7 @@
 namespace Application\controller;
 
 use Application\dao\ArticleDao;
+use Application\dao\ReviewDao;
 use Application\dao\UserDao;
 use Application\model\User;
 use Application\verificator\UserVerificator;
@@ -12,6 +13,7 @@ use Error;
 class UserController
 {
   private ArticleDao $articleDao;
+  private ReviewDao $reviewDao;
 
   private UserDao $userDao;
   private UserVerificator $verificator;
@@ -19,6 +21,7 @@ class UserController
   public function __construct()
   {
     $this->articleDao = ArticleDao::getInstance();
+    $this->reviewDao = ReviewDao::getInstance();
     $this->userDao = UserDao::getInstance();
     $this->verificator = new UserVerificator;
   }
@@ -44,6 +47,25 @@ class UserController
     include "./app/view/user/create.php";
   }
 
+  public function show($alias)
+  {
+    $verificator = $this->verificator->verifUser($alias);
+    if ($verificator) {
+      $user = $this->userDao->findByAlias($alias);
+
+      $data = [
+        "articles" => $this->articleDao->getByUserId($user->id),
+        "reviews" => $this->reviewDao->getByUserId($user->id),
+        "all_article" => $this->articleDao->getAll(),
+        "user" => $user
+      ];
+      extract($data);
+      include "./app/view/user/show.php";
+    } else {
+      header("Location: /");
+    }
+  }
+
   public function update($alias)
   {
     $verificator = $this->verificator->verifUser($alias);
@@ -51,20 +73,6 @@ class UserController
       $data = ["user" => $this->userDao->findByAlias($alias)];
       extract($data);
       include "./app/view/user/update.php";
-    } else {
-      header("Location: /");
-    }
-  }
-
-  public function show($alias)
-  {
-    $verificator = $this->verificator->verifUser($alias);
-    if ($verificator) {
-      $user = $this->userDao->findByAlias($alias);
-
-      $data = ["articles" => $this->articleDao->getByUserId($user->id), "user" => $user];
-      extract($data);
-      include "./app/view/user/show.php";
     } else {
       header("Location: /");
     }

@@ -49,6 +49,66 @@ class ReviewDao extends Dao
     return $reviews;
   }
 
+  // Récupère tous les commentaires liés à un utilisateur
+  public function getByUserId(int $id): array
+  {
+    $request = "SELECT * FROM reviews WHERE id_user = :id";
+
+    $stmt = self::$connection->prepare($request);
+    $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+
+    try {
+      $stmt->execute();
+      $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      throw new Error("REVIEWDAO.getByUserId failed: " . $e->getMessage());
+    }
+
+    $reviews = [];
+    foreach ($data as $row) {
+      $review = new Review(
+        $row["id_review"],
+        $row["id_user"],
+        $row["id_article"],
+        $row["slug"],
+        $row["title_review"],
+        $row["content_review"],
+      );
+      $reviews[] = $review;
+    };
+    return $reviews;
+  }
+
+  // Récupère tous les commentaires liés à un article
+  public function getByArticleId(int $id): array
+  {
+    $request = "SELECT * FROM reviews WHERE id_article = :id";
+
+    $stmt = self::$connection->prepare($request);
+    $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+
+    try {
+      $stmt->execute();
+      $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      throw new Error("REVIEWDAO.getByArticleId failed: " . $e->getMessage());
+    }
+
+    $reviews = [];
+    foreach ($data as $row) {
+      $review = new Review(
+        $row["id_review"],
+        $row["id_user"],
+        $row["id_article"],
+        $row["slug"],
+        $row["title_review"],
+        $row["content_review"],
+      );
+      $reviews[] = $review;
+    };
+    return $reviews;
+  }
+
   // Trouve un commentaires par son identifiant
   public function findById(int $id): Review
   {
@@ -166,14 +226,12 @@ class ReviewDao extends Dao
   }
 
   // Supprime un commentaire de la BDD
-  public function delete(Review $review)
+  public function delete(int $id)
   {
     $request = "DELETE FROM reviews WHERE id_review = :id";
 
-    $review_id = $review->id;
-
     $stmt = self::$connection->prepare($request);
-    $stmt->bindParam(":id", $review_id, PDO::PARAM_INT);
+    $stmt->bindParam(":id", $id, PDO::PARAM_INT);
 
     try {
       $stmt->execute();

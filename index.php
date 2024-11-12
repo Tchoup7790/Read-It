@@ -13,14 +13,17 @@ require "./app/model/User.php";
 
 require "./app/controller/ArticleController.php";
 require "./app/controller/UserController.php";
+require "./app/controller/ReviewController.php";
 
 require "./app/verificator/UserVerificator.php";
 require "./app/verificator/ArticleVerificator.php";
+require "./app/verificator/ReviewVerificator.php";
 
 require "./router.php";
 
 use Application\controller\ArticleController;
 use Application\controller\UserController;
+use Application\controller\ReviewController;
 use Application\Database;
 use Application\Router;
 
@@ -37,6 +40,7 @@ Database::createInstance($db_host, $db_name, $db_username, $db_password);
 // routage, controller et dao
 $articleController = new ArticleController();
 $userController = new UserController();
+$reviewController = new ReviewController();
 
 Router::addRoute("GET", "/", [$articleController, "home"]);
 
@@ -57,6 +61,12 @@ Router::addRoute("GET", "/article/{slug}", [$articleController, "show"]);
 Router::addRoute("GET", "/article/update/{slug}", [$articleController, "update"]);
 Router::addRoute("POST", "/article/change/{slug}", [$articleController, "change"]);
 Router::addRoute("GET", "/article/delete/{slug}", [$articleController, "delete"]);
+
+Router::addRoute("GET", "/article/{slug}/create", [$reviewController, "create"]);
+Router::addRoute("POST", "/review/{slug}/register", [$reviewController, "register"]);
+Router::addRoute("GET", "/review/update/{slug}", [$reviewController, "update"]);
+Router::addRoute("POST", "/review/change/{slug}", [$reviewController, "change"]);
+Router::addRoute("GET", "/review/delete/{slug}", [$reviewController, "delete"]);
 
 $method = $_SERVER["REQUEST_METHOD"];
 $path = $_SERVER["REQUEST_URI"];
