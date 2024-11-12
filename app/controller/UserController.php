@@ -9,7 +9,7 @@ use Application\verificator\UserVerificator;
 
 use Error;
 
-class AuthController
+class UserController
 {
   private ArticleDao $articleDao;
 
@@ -48,21 +48,23 @@ class AuthController
   {
     $verificator = $this->verificator->verifUser($alias);
     if ($verificator) {
-      $user = $this->userDao->findByAlias($alias);
+      $data = ["user" => $this->userDao->findByAlias($alias)];
+      extract($data);
       include "./app/view/user/update.php";
     } else {
       header("Location: /");
     }
   }
 
-  public function user($alias)
+  public function show($alias)
   {
     $verificator = $this->verificator->verifUser($alias);
     if ($verificator) {
       $user = $this->userDao->findByAlias($alias);
 
-      $articles = $this->articleDao->getByUserId($user->id);
-      include "./app/view/user/user.php";
+      $data = ["articles" => $this->articleDao->getByUserId($user->id), "user" => $user];
+      extract($data);
+      include "./app/view/user/show.php";
     } else {
       header("Location: /");
     }

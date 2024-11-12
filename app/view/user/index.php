@@ -5,24 +5,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
-    <title>User Page ReadIt</title>
+    <title>Page Utilisateur</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.min.css" />
   </head>
 
   <body>
-    <header class="container">
-      <nav>
-        <li>
-          <h2>
-            <a href="/">Read It</a>
-          </h2>
-        </li>
-      </nav>
-      <?php include "./app/view/_session.php"; ?>
-    </header>
+    <?php include "./app/view/component/_simple-header.php" ?>
     <main class="container">
+      <?php include "./app/view/component/_session.php" ?>
       <div class="grid" style="justify-content: center;align-items: center;display: flex;height: 50%;">
         <a href="/user/create">
           <button class="outline">Créer un compte</button>

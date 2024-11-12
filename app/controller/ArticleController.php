@@ -23,21 +23,25 @@ class ArticleController
     $this->articleDao = ArticleDao::getInstance();
   }
 
-  public function index()
+  public function home()
   {
     if (isset($_SESSION["user"])) {
       $user = $this->userDao->findByAlias($_SESSION["user"]);
       $user = $user->id;
     }
-    $articles = $this->articleDao->getAll();
-    include "./app/view/article/index.php";
+    $data = ["articles" => $this->articleDao->getAll()];
+    extract($data);
+    include "./app/view/home.php";
   }
 
   public function create()
   {
     if (!isset($_SESSION["user"])) {
       header("Location: /user");
+      $_SESSION["message"] = "Connectez-vous ou créez un compte pour écrire un article";
     } else {
+      $data = ["action" => "/article/register", "submit" => "Créer l'article"];
+      extract($data);
       include "./app/view/article/create.php";
     }
   }
@@ -47,10 +51,23 @@ class ArticleController
     $verificator = $this->verificator->verifUser($slug);
     if ($verificator) {
       $article = $this->articleDao->findBySlug($slug);
+      $_SESSION["form_data"]["title"] = $article->title;
+      $_SESSION["form_data"]["content"] = $article->content;
+      $data = ["article" => $article, "action" => "/article/change/" . $article->slug, "submit" => "Mofifier l'article"];
+      extract($data);
       include "./app/view/article/update.php";
     } else {
       header("Location: /");
     }
+  }
+
+  public function show($slug)
+  {
+    $article = $this->articleDao->findBySlug($slug);
+
+    $data = ["article" => $article, "user" => $this->userDao->findById($article->user_id)];
+    extract($data);
+    include "./app/view/article/show.php";
   }
 
   public function register()
@@ -85,7 +102,7 @@ class ArticleController
         $this->returnWithError("/article/update/" . $article->slug, $verificator[0], $verificator[1]);
       }
 
-      $new_article = new Article($article->id, $article->id, str_replace(' ', '-', strtolower($_POST["title"])), $_POST["title"], $_POST["content"]);
+      $new_article = new Article($article->id, $article->user_id, str_replace(' ', '-', strtolower($_POST["title"])), $_POST["title"], $_POST["content"]);
 
       try {
         $this->articleDao->update($new_article);
@@ -96,7 +113,7 @@ class ArticleController
         $this->returnWithError("/article/update/" . $article->slug, "", "Unknown Error : " . $e->getMessage());
       }
     } else {
-      header("location: /");
+      header("Location: /user");
     }
   }
 

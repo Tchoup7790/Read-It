@@ -46,6 +46,11 @@ class ArticleVerificator
         if (isset($article) && $article->title == $_POST["title"]) {
           return ["-title", "Ce titre d'article est déjà utilisé"];
         }
+
+        // check content
+        if ($_POST["content"] == "") {
+          return ["-content", "Veuilliez rentrer un texte"];
+        }
       }
     }
 
@@ -57,15 +62,13 @@ class ArticleVerificator
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       // check title
-      if ($_POST["title"] != "") {
-        try {
-          $article = $this->articleDao->findBySlug(str_replace(' ', '-', strtolower($_POST["title"])));
-        } catch (Error) {
-        } finally {
-          if (isset($article) && !is_null($article)) {
-            return ["-title", "Ce titre d'article est déjà utilisé"];
-          }
-        }
+      if ($_POST["title"] == "") {
+        return ["-title", "Veuilliez rentrer une valeur pour le titre"];
+      }
+
+      // check content
+      if ($_POST["content"] == "") {
+        return ["-content", "Veuilliez rentrer un texte"];
       }
     }
 

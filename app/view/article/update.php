@@ -5,64 +5,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
-    <title>Modification d'un article</title>
+    <title>Modification de <?php echo $article->slug ?></title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.min.css" />
   </head>
 
   <body>
-    <header class="container">
-      <nav>
-        <li>
-          <h2>
-            <a href="/">Read It</a>
-          </h2>
-        </li>
-      </nav>
-    </header>
+    <?php include "./app/view/component/_header.php" ?>
     <main class="container">
       <h2>Modification d'un article</h2>
-      <form action=<?php echo "/user/change/" . $article->slug ?> method="POST">
-
-        <?php include "./app/view/_session.php" ?>
-        <label for="title">Titre</label>
-        <input
-          type="text"
-          id="title"
-          name="title"
-          value="<?php echo $article->title ?>">
-        <small>
-          <?php if (isset($_SESSION["error-title"])): ?>
-            <p style="color: #ce7e7b;">
-              <?php echo $_SESSION["error-title"];
-              unset($_SESSION["error-title"]) ?>
-            </p>
-          <?php endif; ?>
-        </small>
-
-
-        <label for="content">Texte</label>
-        <textarea
-          id="content"
-          name="content"
-          style="height: 300px; " />
-        <?php echo $article->content ?>
-        </textarea>
-        <small>
-          <?php if (isset($_SESSION["error-content"])): ?>
-            <p style="color: #ce7e7b;">
-              <?php echo $_SESSION["error-content"];
-              unset($_SESSION["error-content"]) ?>
-            </p>
-          <?php endif; ?>
-        </small>
-        <br>
-        <button type="submit">Créer l'article</button>
-      </form>
-
-      <?php
-      unset($_SESSION['form_data']);
-      ?>
+      <?php include "./app/view/article/_form.php" ?>
     </main>
   </body>
